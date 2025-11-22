@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud Memory Room ☁️✨</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    background: linear-gradient(to bottom, #ffffff 0%, #f8f9ff 100%);
+    overflow: hidden;
+    height: 100vh;
+    position: relative;
+    cursor: none;
+}
+
+.custom-cursor {
+    width: 20px;
+    height: 20px;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    border: 2px solid #999;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.1s ease;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.custom-cursor::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #999;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.custom-cursor.clicked {
+    transform: translate(-50%, -50%) scale(1.5);
+    border-color: #666;
+}
+
+.custom-cursor.clicked::after {
+    background: #666;
+}
+
+.bg-emoji {
+    display: none;
+}
+
+.sparkle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    animation: sparkleFloat linear infinite;
+    pointer-events: none;
+}
+
+@keyframes sparkleFloat {
+    0% {
+        transform: translateY(0) scale(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100vh) scale(0);
+        opacity: 0;
+    }
+}
+
+.string {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 120px;
+    background: linear-gradient(to bottom, rgba(200, 200, 200, 0.4), rgba(150, 150, 150, 0.8));
+    z-index: 99;
+    transform-origin: top center;
+    animation: stringSwing 3s ease-in-out infinite 2s;
+}
+
+@keyframes stringSwing {
+    0%, 100% { transform: translateX(-50%) rotate(0deg); }
+    25% { transform: translateX(-50%) rotate(2deg); }
+    75% { transform: translateX(-50%) rotate(-2deg); }
+}
+
+.angel-container {
+    position: absolute;
+    top: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 100;
+    animation: cardDrop 2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards,
+               cardSwing 3s ease-in-out infinite 2s;
+    transform-origin: top center;
+}
+
+@keyframes cardDrop {
+    0% {
+        transform: translateX(-50%) translateY(-600px);
+        opacity: 0;
+    }
+    60% {
+        transform: translateX(-50%) translateY(20px);
+    }
+    80% {
+        transform: translateX(-50%) translateY(-10px);
+    }
+    100% {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes cardSwing {
+    0%, 100% { transform: translateX(-50%) rotate(0deg); }
+    25% { transform: translateX(-50%) rotate(3deg); }
+    75% { transform: translateX(-50%) rotate(-3deg); }
+}
+
+.angel-image-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.card-frame {
+    width: 200px;
+    height: 250px;
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    position: relative;
+}
+
+.angel-image {
+    width: 170px;
+    height: 170px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
+    animation: glow 3s ease-in-out infinite;
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+    50% {
+        box-shadow: 0 5px 30px rgba(255, 255, 255, 0.5),
+                    0 0 40px rgba(200, 200, 255, 0.3);
+    }
+}
+
+.wings {
+    position: absolute;
+    top: 50%;
+    font-size: 60px;
+    transform: translateY(-50%);
+    opacity: 0.8;
+    animation: wingFlap 4s ease-in-out infinite;
+}
+
+.wings.left { left: -60px; }
+.wings.right { right: -60px; transform: translateY(-50%) scaleX(-1); }
+
+@keyframes wingFlap {
+    0%, 100% { transform: translateY(-50%) rotate(0deg); }
+    50% { transform: translateY(-55px) rotate(-5deg); }
+}
+
+.angel-name {
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #999;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.cloud {
+    position: absolute;
+    background: white;
+    border-radius: 100px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    cursor: none;
+    transition: all 0.3s ease;
+    animation: cloudFloat linear infinite;
+}
+
+.cloud:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.cloud::before,
+.cloud::after {
+    content: '';
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+}
+
+.cloud:hover::before,
+.cloud:hover::after {
+    background: white;
+}
+
+.cloud::before {
+    width: 50px;
+    height: 50px;
+    top: -25px;
+    left: 10px;
+}
+
+.cloud::after {
+    width: 60px;
+    height: 60px;
+    top: -30px;
+    right: 10px;
+}
+
+.cloud-text {
+    position: relative;
+    z-index: 10;
+    padding: 15px 30px;
+    font-size: 14px;
+    color: #888;
+    font-weight: 600;
+}
+
+@keyframes cloudFloat {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0); }
+}
+
+.polaroid-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: modalFadeIn 0.4s ease;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.polaroid {
+    background: white;
+    padding: 20px;
+    padding-bottom: 80px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    transform: rotate(-2deg);
+    animation: polaroidPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    max-width: 400px;
+    width: 90%;
+}
+
+@keyframes polaroidPop {
+    0% { transform: scale(0) rotate(-2deg); }
+    100% { transform: scale(1) rotate(-2deg); }
+}
+
+.polaroid-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.polaroid-message {
+    text-align: center;
+    font-size: 18px;
+    line-height: 1.6;
+    color: #666;
+    font-weight: 500;
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+}
+
+.close-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 768px) {
+    .card-frame { width: 170px; height: 220px; padding: 12px; }
+    .angel-image { width: 146px; height: 146px; }
+    .wings { font-size: 50px; }
+    .wings.left { left: -45px; }
+    .wings.right { right: -45px; }
+    .angel-name { font-size: 18px; }
+    .polaroid-image { height: 250px; }
+    .polaroid-message { font-size: 16px; }
+    .string { height: 100px; display: block; }
+    .angel-container { top: 100px; }
+    .bg-emoji { display: none; }
+    .custom-cursor { display: none; }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    body {
+        cursor: auto;
+    }
+    
+    .custom-cursor {
+        display: none;
+    }
+    
+    .cloud {
+        cursor: pointer;
+    }
+    
+    .close-btn {
+        cursor: pointer;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="custom-cursor"></div>
+<div class="string"></div>
+
+<div class="angel-container">
+    <div class="angel-image-wrapper">
+        <div class="wings left">🤍</div>
+        <div class="card-frame">
+            <img src="sow4.jpg" alt="Angel" class="angel-image">
+            <div class="angel-name">Once again , smile! ✨</div>
+        </div>
+        <div class="wings right">🤍</div>
+    </div>
+</div>
+
+<div class="cloud" style="width: 150px; height: 75px; top: 50%; left: 5%;" data-memory="0">
+    <div class="cloud-text">click me ☁️</div>
+</div>
+
+<div class="cloud" style="width: 160px; height: 80px; top: 50%; right: 5%; animation-duration: 4s;" data-memory="1">
+    <div class="cloud-text">click me ☁️</div>
+</div>
+
+<div class="cloud" style="width: 155px; height: 78px; bottom: 10%; left: 15%; animation-duration: 5s;" data-memory="2">
+    <div class="cloud-text">click me ☁️</div>
+</div>
+
+<div class="cloud" style="width: 165px; height: 82px; bottom: 10%; right: 15%; animation-duration: 4.5s;" data-memory="3">
+    <div class="cloud-text">click me ☁️</div>
+</div>
+
+<div class="polaroid-modal" id="polaroidModal">
+    <button class="close-btn" onclick="closeModal()">×</button>
+    <div class="polaroid">
+        <img src="" alt="Memory" class="polaroid-image" id="polaroidImage">
+        <div class="polaroid-message" id="polaroidMessage"></div>
+    </div>
+</div>
+
+<script>
+const memories = [
+    {
+        image: "sow5.jpg",
+        message: "You are genuinely the kindest person I know.<br>Never change 🤍"
+    },
+    {
+        image: "sow6.jpg",
+        message: "Happiest 19th Bithday once again 😂"
+    },
+    {
+        image: "sow8.jpg",
+        message: "Thank you for existing.<br>🤪."
+    },
+    {
+        image: "sow7.jpg",
+        message: "Your words brightens even the darkest days.<br>Keep shining ✨"
+    }
+];
+
+const cursor = document.querySelector('.custom-cursor');
+document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+});
+
+document.addEventListener('mousedown', () => {
+    cursor.classList.add('clicked');
+});
+
+document.addEventListener('mouseup', () => {
+    cursor.classList.remove('clicked');
+});
+
+function createSparkles() {
+    for (let i = 0; i < 30; i++) {
+        setTimeout(() => {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            sparkle.style.animationDelay = Math.random() * 2 + 's';
+            document.body.appendChild(sparkle);
+            
+            setTimeout(() => sparkle.remove(), 8000);
+        }, i * 100);
+    }
+}
+
+createSparkles();
+setInterval(createSparkles, 5000);
+
+document.querySelectorAll('.cloud').forEach(cloud => {
+    cloud.addEventListener('click', function() {
+        const memoryIndex = parseInt(this.dataset.memory);
+        const memory = memories[memoryIndex];
+        
+        document.getElementById('polaroidImage').src = memory.image;
+        document.getElementById('polaroidMessage').innerHTML = memory.message;
+        document.getElementById('polaroidModal').style.display = 'flex';
+        
+        this.style.transform = 'scale(1.5)';
+        this.style.opacity = '0';
+        setTimeout(() => {
+            this.style.transform = 'scale(1)';
+            this.style.opacity = '1';
+        }, 500);
+    });
+});
+
+function closeModal() {
+    document.getElementById('polaroidModal').style.display = 'none';
+}
+
+document.getElementById('polaroidModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday! 🎉</title>
+
+<style>
+@import url("https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700&display=swap");
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+
+body {
+  cursor: none;
+  overflow: hidden;
+}
+
+.cursor {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  transition: 0.05s ease-out;
+  mix-blend-mode: difference;
+}
+
+.cursor-follower {
+  position: fixed;
+  width: 25px;
+  height: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transition: 0.15s ease-out;
+  mix-blend-mode: difference;
+}
+
+.emoji-burst {
+  position: fixed;
+  font-size: 30px;
+  pointer-events: none;
+  z-index: 9998;
+  animation: burstAnimation 2s ease-out forwards;
+}
+
+@keyframes burstAnimation {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(0.5) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.card {
+  position: relative;
+  width: clamp(120px, 15vw, 190px);
+  height: clamp(160px, 20vw, 254px);
+  background-color: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  padding: clamp(8px, 1vw, 12px);
+  gap: clamp(8px, 1vw, 12px);
+  border-radius: clamp(5px, 0.6vw, 8px);
+  cursor: pointer;
+  color: white;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  left: -5px;
+  margin: auto;
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
+  border-radius: clamp(6px, 0.8vw, 10px);
+  background: linear-gradient(-45deg, #e81cff 0%, #40c9ff 100% );
+  z-index: -10;
+  pointer-events: none;
+  transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card::after {
+  content: "";
+  z-index: -1;
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(-45deg, #fc00ff 0%, #00dbde 100% );
+  transform: scale(0.95);
+  filter: blur(clamp(10px, 2vw, 20px));
+}
+
+.card:hover::after { 
+  filter: blur(clamp(15px, 3vw, 30px)); 
+  width: 115%; 
+}
+.card:hover::before {
+  transform: rotate(-90deg) scaleX(1.34) scaleY(0.77);
+}
+
+.heading { 
+  font-size: clamp(14px, 1.5vw, 20px); 
+  font-weight: 700; 
+}
+.card p:not(.heading) { 
+  font-size: clamp(10px, 1vw, 14px); 
+}
+.card p:last-child { 
+  color: #e81cff; 
+  font-weight: 600; 
+}
+
+.card-overlay {
+  position: relative;
+  padding: 0;
+  overflow: visible !important;
+}
+
+.card-overlay img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: clamp(5px, 0.6vw, 8px);
+  position: relative;
+  z-index: 2;
+}
+
+.card-overlay .text-block {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: clamp(10px, 1.2vw, 15px);
+  background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0));
+  color: white;
+  z-index: 3;
+}
+
+.card-overlay::before,
+.card-overlay::after {
+  z-index: 1 !important;
+}
+
+section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wave {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #4973ff;
+}
+
+.wave span {
+  position: absolute;
+  width: 325vh;
+  height: 325vh;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -75%);
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+}
+
+.content h2 {
+  font-size: clamp(2em, 8vw, 4em);
+  color: #fff;
+  filter: blur(50px);
+  opacity: 0;
+  transition: opacity 2s ease, filter 2s ease;
+}
+
+.show-text { filter: blur(0px) !important; opacity: 1 !important; }
+
+.wave span:nth-child(1) {
+  background: rgba(20,20,20,1);
+  border-radius: 45%;
+  animation: rotate 5s linear infinite;
+}
+.wave span:nth-child(2) {
+  background: rgba(20,20,20,0.5);
+  border-radius: 40%;
+  animation: rotate 10s linear infinite;
+}
+.wave span:nth-child(3) {
+  background: rgba(20,20,20,0.5);
+  border-radius: 42%;
+  animation: rotate 15s linear infinite;
+}
+
+@keyframes rotate {
+  0% { transform: translate(-50%, -75%) rotate(0deg); }
+  100% { transform: translate(-50%, -75%) rotate(360deg); }
+}
+
+#loading {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 1.5s ease;
+}
+
+.progress-bar {
+  width: min(250px, 70vw);
+  height: clamp(8px, 1vw, 10px);
+  background: #ddd;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #6a0dad;
+  transition: width 0.1s;
+}
+
+#msg {
+  font-size: clamp(14px, 2vw, 16px);
+  margin-top: 15px;
+}
+
+#percent {
+  font-size: clamp(12px, 1.8vw, 14px);
+  margin-top: 10px;
+}
+
+.hidden { display: none; }
+
+.hanger {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: swing 3s ease-in-out infinite;
+}
+
+.string {
+  width: clamp(1px, 0.2vw, 2px);
+  height: clamp(2000px, 200vh, 5000px);
+  background: #ffffffbb;
+  margin-bottom: clamp(5px, 1vw, 10px);
+  border-radius: 2px;
+}
+
+.hanger:nth-child(3) .string {
+  height: clamp(1800px, 180vh, 5000px);
+}
+
+.hanger .card {
+  animation: cardDrop 2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  opacity: 0;
+}
+
+.hanger:nth-child(1) .card { animation-delay: 0.5s; }
+.hanger:nth-child(2) .card { animation-delay: 1s; }
+.hanger:nth-child(3) .card { animation-delay: 1.5s; }
+.hanger:nth-child(4) .card { animation-delay: 2s; }
+
+@keyframes cardDrop {
+  0% {
+    transform: translateY(-600px) rotate(-10deg);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(20px) rotate(5deg);
+  }
+  80% {
+    transform: translateY(-10px) rotate(-2deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes swing {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(3deg); }
+  50% { transform: rotate(0deg); }
+  75% { transform: rotate(-3deg); }
+  100% { transform: rotate(0deg); }
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+@media (max-width: 768px) {
+  .hanger { transform: scale(0.8); }
+  .string { height: clamp(1500px, 150vh, 4000px); }
+  .hanger:nth-child(3) .string { height: clamp(1300px, 130vh, 4000px); }
+}
+
+@media (max-width: 480px) {
+  .hanger { transform: scale(0.6); }
+  .string { height: clamp(1000px, 100vh, 3000px); }
+  .hanger:nth-child(3) .string { height: clamp(900px, 90vh, 3000px); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="cursor"></div>
+<div class="cursor-follower"></div>
+
+<div id="loading">
+  <div class="progress-bar"><div id="fill" class="progress-fill"></div></div>
+  <div id="msg">Please wait...</div>
+  <div id="percent">0%</div>
+</div>
+
+<div id="content" class="hidden">
+
+<section>
+
+  <div class="wave">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <div class="content">
+    <h2 id="hb">Happy 19 Sow! 🥳🎉</h2>
+  </div>
+
+  <div class="hanger" style="right:80%; bottom:30%;">
+    <div class="string" style="height: clamp(1800px, 180vh, 5000px);"></div>
+    <div class="card card-overlay">
+      <img src="sow1.jpg" alt="">
+      <div class="text-block">
+        <p class="heading">Wicked?!</p>
+        <p>Click 👇 to explore</p>
+        <p><a href="first.html" target="_blank">Click meeee!👀</a></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="hanger" style="left:80%; bottom:50%;">
+    <div class="string"></div>
+    <div class="card card-overlay">
+      <img src="sow4.jpg" alt="">
+      <div class="text-block">
+        <p class="heading">White House🤍</p>
+        <p>Click 👇 to visit</p>
+        <p><a href="fourth.html" target="_blank">Click meeeee🤍</a></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="hanger" style="right:60%; bottom:60%;">
+    <div class="string"></div>
+    <div class="card card-overlay">
+      <img src="sow2.jpg" alt="">
+      <div class="text-block">
+        <p class="heading">Vid Store 😁!</p>
+        <p>Click 👇 to visit our store</p>
+        <p><a href="second.html" target="_blank">Click pinkkkkkkk!💕</a></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="hanger" style="left:60%; bottom:10%;">
+    <div class="string"></div>
+    <div class="card card-overlay">
+      <img src="sow3.jpg" alt="">
+      <div class="text-block">
+        <p class="heading">Vid's Heart Game Show😎</p>
+        <p>Click 👇 to play</p>
+        <p><a href="third.html" target="_blank">Click itttttt</a></p>
+      </div>
+    </div>
+  </div>
+
+</section>
+</div>
+
+<script>
+const cursor = document.querySelector('.cursor');
+const follower = document.querySelector('.cursor-follower');
+
+document.addEventListener('mousemove', (e) => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  
+  setTimeout(() => {
+    follower.style.left = e.clientX + 'px';
+    follower.style.top = e.clientY + 'px';
+  }, 100);
+});
+
+const birthdayEmojis = ['🎉', '🎊', '🎈', '🎁', '🎂', '🥳', '✨', '🎀', '🌟', '💝'];
+
+function createEmojiBurst() {
+  const emoji = document.createElement('div');
+  emoji.className = 'emoji-burst';
+  emoji.textContent = birthdayEmojis[Math.floor(Math.random() * birthdayEmojis.length)];
+  emoji.style.left = Math.random() * 100 + '%';
+  emoji.style.top = Math.random() * 100 + '%';
+  
+  const tx = (Math.random() - 0.5) * 200;
+  const ty = (Math.random() - 0.5) * 200;
+  emoji.style.setProperty('--tx', tx + 'px');
+  emoji.style.setProperty('--ty', ty + 'px');
+  
+  document.body.appendChild(emoji);
+  
+  setTimeout(() => emoji.remove(), 2000);
+}
+
+let count = 0;
+let fill = document.getElementById("fill");
+let percent = document.getElementById("percent");
+let msg = document.getElementById("msg");
+let loading = document.getElementById("loading");
+let content = document.getElementById("content");
+let hb = document.getElementById("hb");
+
+let interval = setInterval(() => {
+  count++;
+  fill.style.width = count + "%";
+  percent.textContent = count + "%";
+
+  if(count === 50) msg.textContent = "Please wait...";
+  if(count === 80) msg.textContent = "Almost there...";
+  if(count === 100) msg.textContent = "Get Ready! 🎉";
+
+  if (count === 100) {
+    clearInterval(interval);
+    loading.style.opacity = "0";
+
+    setTimeout(() => {
+      loading.style.display = "none";
+      content.classList.remove("hidden");
+
+      setTimeout(() => {
+        hb.classList.add("show-text");
+        
+        setTimeout(() => {
+          for (let i = 0; i < 30; i++) {
+            setTimeout(() => createEmojiBurst(), i * 100);
+          }
+        }, 500);
+      }, 300);
+    }, 1500);
+  }
+}, 40);
+
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('mouseenter', () => {
+    cursor.style.transform = 'scale(1.5)';
+    follower.style.transform = 'scale(1.3)';
+  });
+  
+  card.addEventListener('mouseleave', () => {
+    cursor.style.transform = 'scale(1)';
+    follower.style.transform = 'scale(1)';
+  });
+});
+</script>
+
+</body>
+</html>
